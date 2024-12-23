@@ -3,7 +3,6 @@ package main
 import (
 	"app/app/api/route"
 	"app/app/bootstrap"
-	_ "app/app/cmd/docs"
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
