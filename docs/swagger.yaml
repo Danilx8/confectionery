@@ -1,0 +1,72 @@
+basePath: /
+definitions:
+  domain.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.LoginRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  domain.LoginResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Описание работы сервера
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Login of user
+      tags:
+      - Login
+swagger: "2.0"
