@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS `toolings`;
 CREATE TABLE `toolings` (
     marking varchar(255) NOT NULL,
     type varchar(255) NOT NULL,
-    properties varchar(1000),
+    properties json,
     PRIMARY KEY (marking),
     FOREIGN KEY (type) REFERENCES `tooling_types`(name)
 );

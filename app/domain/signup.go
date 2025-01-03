@@ -1,8 +1,9 @@
 package domain
 
 type SignupRequest struct {
-	Login    string `json:"login"`
-	Password string `json:"password"`
+	Login    string `json:"login" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	FullName string `json:"fullName"`
 }
 
 type SignupResponse struct {

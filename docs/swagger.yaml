@@ -11,12 +11,84 @@ definitions:
         type: string
       password:
         type: string
+    required:
+    - login
+    - password
     type: object
   domain.LoginResponse:
     properties:
       accessToken:
         type: string
       refreshToken:
+        type: string
+    type: object
+  domain.RefreshTokenResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  domain.SignupRequest:
+    properties:
+      fullName:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  domain.SignupResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  domain.Supplier:
+    properties:
+      address:
+        type: string
+      deliveryTime:
+        description: в часах
+        type: integer
+      name:
+        type: string
+    type: object
+  domain.Tooling:
+    properties:
+      marking:
+        type: string
+      properties:
+        type: string
+      type:
+        $ref: '#/definitions/domain.ToolingType'
+      typeName:
+        type: string
+    type: object
+  domain.ToolingRequest:
+    properties:
+      acquireTime:
+        type: string
+      amount:
+        type: integer
+      decayLevel:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      supplier:
+        $ref: '#/definitions/domain.Supplier'
+      type:
+        $ref: '#/definitions/domain.ToolingType'
+    type: object
+  domain.ToolingType:
+    properties:
+      name:
         type: string
     type: object
 externalDocs:
@@ -68,5 +140,185 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       summary: Login of user
       tags:
-      - Login
+      - Authorisation
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.RefreshTokenResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RefreshTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - Tokens
+  /signup:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SignupResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Signup of clients
+      tags:
+      - Authorisation
+  /tooling/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ToolingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Tooling'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Create a new tooling
+      tags:
+      - Toolings
+  /tooling/delete:
+    delete:
+      consumes:
+      - application/text
+      parameters:
+      - description: ID of a tooling to be deleted
+        in: body
+        name: Tooling_ID
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete a tooling
+      tags:
+      - Toolings
+  /tooling/edit:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ToolingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Tooling'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Update a tooling
+      tags:
+      - Toolings
+  /tooling/get:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Tooling'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get a list of all toolings
+      tags:
+      - Toolings
 swagger: "2.0"

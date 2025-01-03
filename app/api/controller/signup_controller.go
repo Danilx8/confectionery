@@ -2,76 +2,76 @@ package controller
 
 import (
 	"app/app/bootstrap"
-	domain2 "app/app/domain"
+	"app/app/domain"
 	"app/app/internal/passwordutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type SignupController struct {
-	SignupUsecase domain2.SignupUsecase
+	SignupUsecase domain.SignupUsecase
 	Env           *bootstrap.Env
 }
 
-func (sc *SignupController) Signup(c *gin.Context) { // Регистрация только для заказчиков (Client)
-	var request domain2.SignupRequest
+// Signup godoc
+// @Summary	Signup of clients
+// @Tags Authorisation
+// @Accept json
+// @Produce json
+// @Param        data    body   domain.SignupRequest true  "scheme of login"
+// @Success 200 {object} domain.SignupResponse
+// @Failure 400 {object} domain.ErrorResponse
+// @Failure 409 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Router /signup [post]
+func (sc *SignupController) Signup(c *gin.Context) {
+	var request domain.SignupRequest
 
 	err := c.ShouldBind(&request)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain2.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	_, err = sc.SignupUsecase.GetUserByLogin(request.Login)
 	if err == nil {
-		c.JSON(http.StatusConflict, domain2.ErrorResponse{Message: "User already exists with the given login"})
-		return
-	}
-
-	encryptedPassword, err := bcrypt.GenerateFromPassword(
-		[]byte(request.Password),
-		bcrypt.DefaultCost,
-	)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain2.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "User already exists with the given login"})
 		return
 	}
 
 	err = passwordutil.ValidateClientPassword(request.Password, request.Login)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain2.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	request.Password = string(encryptedPassword)
-
-	user := domain2.User{
+	user := domain.User{
 		Login:    request.Login,
 		Password: request.Password,
-		Role:     "Client",
+		FullName: request.FullName,
+		Role:     domain.RoleName[domain.Client],
 	}
 
 	newUser, err := sc.SignupUsecase.Create(&user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain2.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	accessToken, err := sc.SignupUsecase.CreateAccessToken(newUser, sc.Env.AccessTokenSecret, sc.Env.AccessTokenExpiryHours)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain2.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	refreshToken, err := sc.SignupUsecase.CreateRefreshToken(newUser, sc.Env.RefreshTokenSecret, sc.Env.RefreshTokenExpiryHours)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain2.ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	signupResponse := domain2.SignupResponse{
+	signupResponse := domain.SignupResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}

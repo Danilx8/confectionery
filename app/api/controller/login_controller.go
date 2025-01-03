@@ -3,11 +3,8 @@ package controller
 import (
 	"app/app/bootstrap"
 	"app/app/domain"
-	"net/http"
-
-	"golang.org/x/crypto/bcrypt"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type LoginController struct {
@@ -17,7 +14,7 @@ type LoginController struct {
 
 // Login godoc
 // @Summary	Login of user
-// @Tags Login
+// @Tags Authorisation
 // @Accept json
 // @Produce json
 // @Param        data    body   domain.LoginRequest true  "scheme of login"
@@ -41,7 +38,7 @@ func (lc *LoginController) Login(c *gin.Context) {
 		return
 	}
 
-	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)) != nil {
+	if user.Password != request.Password {
 		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid credentials"})
 		return
 	}

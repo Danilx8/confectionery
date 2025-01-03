@@ -33,7 +33,7 @@ func CreateRefreshToken(user *domain.User, secret string, expiry int) (refreshTo
 		Name: user.Login,
 		Role: user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "Кондитерская",
+			Issuer:    "https://localhost:8080/",
 			Subject:   "Authentication",
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(expiry))),
 			NotBefore: jwt.NewNumericDate(time.Now()),

@@ -27,13 +27,13 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 			return
 		}
 
-		userID, err := tokenutil.ExtractIDFromToken(authToken, secret)
+		_, err = tokenutil.ExtractIDFromToken(authToken, secret)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
 			c.Abort()
 			return
 		}
-		c.Set("x-user-id", userID)
+		//c.Set("x-user-id", userID) тратит ну слишком много места
 		c.Next()
 		return
 	}
