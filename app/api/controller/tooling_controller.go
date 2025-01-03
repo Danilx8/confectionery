@@ -53,7 +53,7 @@ func (tc *ToolingController) Create(c *gin.Context) {
 // @Tags Toolings
 // @Accept json
 // @Produce json
-// @Success 200 {object} []domain.Tooling
+// @Success 200 {object} []domain.ToolingResponse
 // @Failure 400 {object} domain.ErrorResponse
 // @Failure 404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
@@ -74,7 +74,7 @@ func (tc *ToolingController) Get(c *gin.Context) {
 	//	}
 	//}
 
-	var toolings []domain.Tooling
+	var toolings []domain.ToolingResponse
 	//if queryAll {
 	toolings, err = tc.ToolingUsecase.GetAll()
 	//} else {

@@ -25,7 +25,7 @@ func (t toolingRepository) Create(tooling *domain.Tooling) error {
 
 func (t toolingRepository) Fetch(conditions string) ([]domain.Tooling, error) {
 	var toolings []domain.Tooling
-	result := t.database.Table("toolings").Where(conditions).Preload("Type").Find(&toolings)
+	result := t.database.Table("toolings").Where(conditions).Find(&toolings)
 	if result.Error != nil {
 		return []domain.Tooling{}, result.Error
 	}

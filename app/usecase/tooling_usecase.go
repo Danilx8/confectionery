@@ -3,6 +3,8 @@ package usecase
 import (
 	"app/app/domain"
 	"github.com/goccy/go-json"
+	"math"
+	"time"
 )
 
 type toolingUsecase struct {
@@ -36,8 +38,36 @@ func (tu *toolingUsecase) Create(tooling *domain.Tooling) error {
 	return tu.toolingRepository.Create(tooling)
 }
 
-func (tu *toolingUsecase) GetAll() ([]domain.Tooling, error) {
-	return tu.toolingRepository.Fetch("")
+func (tu *toolingUsecase) GetAll() ([]domain.ToolingResponse, error) {
+	toolings, err := tu.toolingRepository.Fetch("")
+
+	if err != nil {
+		return nil, err
+	}
+
+	var response []domain.ToolingResponse
+	for _, tooling := range toolings {
+		var properties domain.ToolingRequest
+		err = json.Unmarshal([]byte(tooling.Properties), &properties)
+		if err != nil {
+			continue
+		}
+
+		createTime := 0
+		if properties.AcquireTime != nil {
+			tmp, _ := math.Modf(math.Floor(time.Now().Sub(*properties.AcquireTime).Seconds() / 2600640))
+			createTime = int(tmp)
+		}
+
+		response = append(response, domain.ToolingResponse{
+			Name:   tooling.Marking,
+			Type:   tooling.TypeName,
+			Age:    createTime,
+			Amount: properties.Amount,
+		})
+	}
+
+	return response, nil
 }
 
 //func (tu *toolingUsecase) GetByConditions(conditions domain.ToolingRequest) ([]domain.Tooling, error) {

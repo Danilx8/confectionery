@@ -32,7 +32,7 @@ type ToolingResponse struct {
 type ToolingUsecase interface {
 	Create(tooling *Tooling) error
 	HydrateProperties(request ToolingRequest) (*Tooling, error)
-	GetAll() ([]Tooling, error)
+	GetAll() ([]ToolingResponse, error)
 	//GetByConditions(conditions ToolingRequest) ([]Tooling, error)
 	Update(tooling *Tooling) error
 	Delete(marking string) error
