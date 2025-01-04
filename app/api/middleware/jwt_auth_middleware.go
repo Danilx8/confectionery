@@ -27,13 +27,15 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 			return
 		}
 
-		_, err = tokenutil.ExtractIDFromToken(authToken, secret)
+		userRole, err := tokenutil.ExtractRoleFromToken(authToken, secret)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
 			c.Abort()
 			return
 		}
-		//c.Set("x-user-id", userID) тратит ну слишком много места
+
+		r := strings.NewReplacer("\r", "")
+		c.Set("x-user-role", r.Replace(userRole))
 		c.Next()
 		return
 	}

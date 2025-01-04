@@ -55,7 +55,7 @@ func (tu *toolingUsecase) GetAll() ([]domain.ToolingResponse, error) {
 
 		createTime := 0
 		if properties.AcquireTime != nil {
-			tmp, _ := math.Modf(math.Floor(time.Now().Sub(*properties.AcquireTime).Seconds() / 2600640))
+			tmp, _ := math.Modf(math.Floor(time.Now().Sub(*properties.AcquireTime).Seconds() / 2600640)) // в месяцах
 			createTime = int(tmp)
 		}
 
