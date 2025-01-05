@@ -42,7 +42,7 @@ func (t toolingRepository) Edit(tooling *domain.Tooling) error {
 }
 
 func (t toolingRepository) Remove(marking string) error {
-	result := t.database.Table("toolings").Where("marking = ?", marking).Delete(&domain.Tooling{})
+	result := t.database.Table("toolings").Where("marking = ?", marking).Delete(&domain.Tooling{Marking: marking})
 	if result.Error != nil {
 		return result.Error
 	}
