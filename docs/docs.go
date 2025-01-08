@@ -327,6 +327,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/order/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create a new order",
+                "parameters": [
+                    {
+                        "description": "scheme of order request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.OrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/refresh": {
             "post": {
                 "consumes": [
@@ -692,6 +737,17 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.Item": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.LoginRequest": {
             "type": "object",
             "required": [
@@ -714,6 +770,79 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "refreshToken": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Order": {
+            "type": "object",
+            "properties": {
+                "assignedManager": {
+                    "$ref": "#/definitions/domain.User"
+                },
+                "assignedManagerName": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "examples": {
+                    "type": "string"
+                },
+                "expectedFulfilmentDate": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "item": {
+                    "$ref": "#/definitions/domain.Item"
+                },
+                "itemName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "orderer": {
+                    "$ref": "#/definitions/domain.User"
+                },
+                "ordererName": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.OrderRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "examples": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "manager": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "orderer": {
+                    "type": "string"
+                },
+                "size": {
                     "type": "string"
                 }
             }
@@ -837,6 +966,26 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.User": {
+            "type": "object",
+            "properties": {
+                "fullName": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "photoURL": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 }
             }

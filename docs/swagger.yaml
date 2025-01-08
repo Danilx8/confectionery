@@ -55,6 +55,13 @@ definitions:
       unit:
         type: string
     type: object
+  domain.Item:
+    properties:
+      name:
+        type: string
+      size:
+        type: string
+    type: object
   domain.LoginRequest:
     properties:
       login:
@@ -70,6 +77,54 @@ definitions:
       accessToken:
         type: string
       refreshToken:
+        type: string
+      role:
+        type: string
+    type: object
+  domain.Order:
+    properties:
+      assignedManager:
+        $ref: '#/definitions/domain.User'
+      assignedManagerName:
+        type: string
+      date:
+        type: string
+      examples:
+        type: string
+      expectedFulfilmentDate:
+        type: string
+      id:
+        type: string
+      item:
+        $ref: '#/definitions/domain.Item'
+      itemName:
+        type: string
+      name:
+        type: string
+      orderer:
+        $ref: '#/definitions/domain.User'
+      ordererName:
+        type: string
+      price:
+        type: number
+      status:
+        type: string
+    type: object
+  domain.OrderRequest:
+    properties:
+      description:
+        type: string
+      examples:
+        type: string
+      id:
+        type: string
+      manager:
+        type: string
+      name:
+        type: string
+      orderer:
+        type: string
+      size:
         type: string
     type: object
   domain.RefreshTokenResponse:
@@ -150,6 +205,19 @@ definitions:
   domain.ToolingType:
     properties:
       name:
+        type: string
+    type: object
+  domain.User:
+    properties:
+      fullName:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+      photoURL:
+        type: string
+      role:
         type: string
     type: object
 externalDocs:
@@ -364,6 +432,35 @@ paths:
       summary: Login of user
       tags:
       - Authorisation
+  /order/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.OrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Order'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Create a new order
+      tags:
+      - Orders
   /refresh:
     post:
       consumes:

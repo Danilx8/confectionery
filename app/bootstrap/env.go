@@ -22,6 +22,7 @@ type Env struct {
 	RefreshTokenSecret      string `mapstructure:"REFRESH_TOKEN_SECRET"`
 	RefreshTokenExpiryHours int    `mapstructure:"REFRESH_TOKEN_EXPIRY_HOURS"`
 	FrontendUrl             string `mapstructure:"FRONTEND_URL"`
+	StorageLocation         string `mapstructure:"STORAGE_LOCATION"`
 }
 
 func NewEnv() *Env {

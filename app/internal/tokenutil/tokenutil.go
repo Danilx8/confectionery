@@ -61,7 +61,7 @@ func IsAuthorized(requestToken string, secret string) (bool, error) {
 	return true, nil
 }
 
-func ExtractRoleFromToken(requestToken string, secret string) (string, error) {
+func ExtractLoginFromToken(requestToken string, secret string) (string, error) {
 	token, err := jwt.Parse(requestToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -79,10 +79,10 @@ func ExtractRoleFromToken(requestToken string, secret string) (string, error) {
 		return "", fmt.Errorf("Invalid Token")
 	}
 
-	return claims["role"].(string), nil
+	return claims["name"].(string), nil
 }
 
-func ExtractLoginFromToken(requestToken string, secret string) (string, error) {
+func ExtractRoleFromToken(requestToken string, secret string) (string, error) {
 	token, err := jwt.Parse(requestToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
