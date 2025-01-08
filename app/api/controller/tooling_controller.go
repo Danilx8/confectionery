@@ -26,24 +26,29 @@ func (tc *ToolingController) Create(c *gin.Context) {
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 
 	if request.Name == "" {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Name field can't be empty"})
+		return
 	}
 
 	if request.Type == nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Type field can't be empty"})
+		return
 	}
 
 	tooling, err := tc.ToolingUsecase.HydrateProperties(request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 
 	err = tc.ToolingUsecase.Create(tooling)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 	c.JSON(http.StatusCreated, tooling)
 }
@@ -59,12 +64,12 @@ func (tc *ToolingController) Create(c *gin.Context) {
 // @Failure 500 {object} domain.ErrorResponse
 // @Router /tooling/get [get]
 func (tc *ToolingController) Get(c *gin.Context) {
-	var request domain.ToolingRequest
-
-	err := c.ShouldBind(&request)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-	}
+	//var request domain.ToolingRequest
+	//
+	//err := c.ShouldBind(&request)
+	//if err != nil {
+	//	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+	//}
 
 	//value := reflect.ValueOf(request)
 	//queryAll := true
@@ -76,17 +81,19 @@ func (tc *ToolingController) Get(c *gin.Context) {
 
 	var toolings []domain.ToolingResponse
 	//if queryAll {
-	toolings, err = tc.ToolingUsecase.GetAll()
+	toolings, err := tc.ToolingUsecase.GetAll()
 	//} else {
 	//	toolings, err = tc.ToolingUsecase.GetByConditions(request)
 	//}
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 
 	if len(toolings) == 0 {
 		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "No tooling found"})
+		return
 	}
 
 	c.JSON(http.StatusOK, toolings)
@@ -108,16 +115,19 @@ func (tc *ToolingController) Edit(c *gin.Context) {
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 
 	tooling, err := tc.ToolingUsecase.HydrateProperties(request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 
 	err = tc.ToolingUsecase.Update(tooling)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, tooling)
 }
@@ -138,11 +148,13 @@ func (tc *ToolingController) Delete(c *gin.Context) {
 	err := c.ShouldBind(&marking)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 
 	err = tc.ToolingUsecase.Delete(marking)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, "The tool was deleted successfully")
 }

@@ -16,9 +16,11 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db gorm.DB, gin *gin.Engin
 	NewLoginRouter(env, timeout, db, publicRouter)
 	NewRefreshTokenRouter(env, timeout, db, publicRouter)
 
-	toolingRouter := gin.Group("")
+	protectedRouter := gin.Group("")
 	// Middleware to verify AccessToken
-	toolingRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
-	//toolingRouter.Use(middleware.RoleMiddleware([]string{domain.RoleName[domain.Director]}))
-	NewToolingRouter(db, toolingRouter)
+	protectedRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
+	//protectedRouter.Use(middleware.RoleMiddleware([]string{domain.RoleName[domain.Director]}))
+	NewToolingRouter(db, protectedRouter)
+	NewIngredientRoute(db, protectedRouter)
+	NewCakeDecorationRoute(db, protectedRouter)
 }

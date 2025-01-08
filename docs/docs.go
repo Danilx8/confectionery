@@ -24,6 +24,258 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/decoration/delete": {
+            "delete": {
+                "consumes": [
+                    "application/text"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cake Decorations"
+                ],
+                "summary": "Delete a given cake decoration by its article",
+                "parameters": [
+                    {
+                        "description": "Article of a cake decoration to be deleted",
+                        "name": "Article",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/decoration/edit": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cake Decorations"
+                ],
+                "summary": "Edit a given decoration",
+                "parameters": [
+                    {
+                        "description": "scheme of cake decoration",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.CakeDecoration"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.CakeDecoration"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/decoration/get": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cake Decorations"
+                ],
+                "summary": "Get a list of all cake decorations",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.CakeDecoration"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ingredient/delete": {
+            "delete": {
+                "consumes": [
+                    "application/text"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Delete a given ingredient by its marking",
+                "parameters": [
+                    {
+                        "description": "Article of an ingredient to be deleted",
+                        "name": "Article",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ingredient/edit": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Edit a given ingredient",
+                "parameters": [
+                    {
+                        "description": "scheme of ingredient",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Ingredient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Ingredient"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ingredient/get": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Get a list of all ingredients",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Ingredient"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "consumes": [
@@ -329,7 +581,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/domain.Tooling"
+                                "$ref": "#/definitions/domain.ToolingResponse"
                             }
                         }
                     },
@@ -356,10 +608,86 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "domain.CakeDecoration": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "article": {
+                    "type": "string"
+                },
+                "costPrice": {
+                    "type": "number"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "supplier": {
+                    "$ref": "#/definitions/domain.Supplier"
+                },
+                "supplierName": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
+                }
+            }
+        },
         "domain.ErrorResponse": {
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Ingredient": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "article": {
+                    "type": "string"
+                },
+                "costPrice": {
+                    "type": "number"
+                },
+                "gost": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "ingredientType": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "packing": {
+                    "type": "string"
+                },
+                "specs": {
+                    "type": "string"
+                },
+                "supplier": {
+                    "$ref": "#/definitions/domain.Supplier"
+                },
+                "supplierName": {
+                    "type": "string"
+                },
+                "unit": {
                     "type": "string"
                 }
             }
@@ -485,6 +813,23 @@ const docTemplate = `{
                 },
                 "type": {
                     "$ref": "#/definitions/domain.ToolingType"
+                }
+            }
+        },
+        "domain.ToolingResponse": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },

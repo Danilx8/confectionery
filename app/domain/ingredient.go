@@ -19,9 +19,25 @@ type Ingredient struct {
 	Specs          string   `gorm:"column:specs"`
 }
 
+type IngredientResponse struct {
+	Article      string  `json:"article"`
+	Name         string  `json:"name"`
+	Amount       int     `json:"amount"`
+	Unit         string  `json:"unit"`
+	CostPrice    float32 `json:"cost_price"`
+	SupplierName string  `json:"supplier"`
+	DeliveryTime int     `json:"delivery_time"`
+}
+
 type IngredientRepository interface {
-	Create(user *User) error
-	Fetch() ([]User, error)
-	GetByEmail(email string) (User, error)
-	GetByID(id string) (User, error)
+	Create(ingredient *Ingredient) error
+	Fetch() ([]Ingredient, error)
+	Edit(ingredient *Ingredient) error
+	Delete(article string) error
+}
+
+type IngredientUsecase interface {
+	GetAll() ([]Ingredient, error)
+	Edit(ingredient *Ingredient) error
+	Delete(article string) error
 }

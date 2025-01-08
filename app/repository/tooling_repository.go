@@ -34,8 +34,7 @@ func (t toolingRepository) Fetch(conditions string) ([]domain.Tooling, error) {
 }
 
 func (t toolingRepository) Edit(tooling *domain.Tooling) error {
-	result := t.database.Table("toolings").Set(tooling.Marking, tooling)
-	if result.Error != nil {
+	if result := t.database.Table("toolings").Save(tooling); result.Error != nil {
 		return result.Error
 	}
 	return nil

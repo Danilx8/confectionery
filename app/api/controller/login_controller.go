@@ -5,6 +5,7 @@ import (
 	"app/app/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 type LoginController struct {
@@ -55,9 +56,11 @@ func (lc *LoginController) Login(c *gin.Context) {
 		return
 	}
 
+	r := strings.NewReplacer("\r", "")
 	loginResponse := domain.LoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		Role:         r.Replace(user.Role),
 	}
 
 	c.JSON(http.StatusOK, loginResponse)

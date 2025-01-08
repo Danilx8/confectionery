@@ -1,8 +1,58 @@
 basePath: /
 definitions:
+  domain.CakeDecoration:
+    properties:
+      amount:
+        type: integer
+      article:
+        type: string
+      costPrice:
+        type: number
+      image:
+        type: string
+      name:
+        type: string
+      supplier:
+        $ref: '#/definitions/domain.Supplier'
+      supplierName:
+        type: string
+      type:
+        type: string
+      unit:
+        type: string
+      weight:
+        type: number
+    type: object
   domain.ErrorResponse:
     properties:
       message:
+        type: string
+    type: object
+  domain.Ingredient:
+    properties:
+      amount:
+        type: integer
+      article:
+        type: string
+      costPrice:
+        type: number
+      gost:
+        type: string
+      image:
+        type: string
+      ingredientType:
+        type: string
+      name:
+        type: string
+      packing:
+        type: string
+      specs:
+        type: string
+      supplier:
+        $ref: '#/definitions/domain.Supplier'
+      supplierName:
+        type: string
+      unit:
         type: string
     type: object
   domain.LoginRequest:
@@ -86,6 +136,17 @@ definitions:
       type:
         $ref: '#/definitions/domain.ToolingType'
     type: object
+  domain.ToolingResponse:
+    properties:
+      age:
+        type: integer
+      amount:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+    type: object
   domain.ToolingType:
     properties:
       name:
@@ -108,6 +169,168 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /decoration/delete:
+    delete:
+      consumes:
+      - application/text
+      parameters:
+      - description: Article of a cake decoration to be deleted
+        in: body
+        name: Article
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete a given cake decoration by its article
+      tags:
+      - Cake Decorations
+  /decoration/edit:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of cake decoration
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CakeDecoration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.CakeDecoration'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Edit a given decoration
+      tags:
+      - Cake Decorations
+  /decoration/get:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.CakeDecoration'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get a list of all cake decorations
+      tags:
+      - Cake Decorations
+  /ingredient/delete:
+    delete:
+      consumes:
+      - application/text
+      parameters:
+      - description: Article of an ingredient to be deleted
+        in: body
+        name: Article
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete a given ingredient by its marking
+      tags:
+      - Ingredients
+  /ingredient/edit:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of ingredient
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Ingredient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Ingredient'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Edit a given ingredient
+      tags:
+      - Ingredients
+  /ingredient/get:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Ingredient'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get a list of all ingredients
+      tags:
+      - Ingredients
   /login:
     post:
       consumes:
@@ -304,7 +527,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/domain.Tooling'
+              $ref: '#/definitions/domain.ToolingResponse'
             type: array
         "400":
           description: Bad Request

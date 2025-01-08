@@ -17,9 +17,25 @@ type CakeDecoration struct {
 	Weight       float32  `gorm:"column:weight"`
 }
 
+type CakeDecorationResponse struct {
+	Article      string  `json:"article"`
+	Name         string  `json:"name"`
+	Amount       int     `json:"amount"`
+	Unit         string  `json:"unit"`
+	CostPrice    float32 `json:"cost_price"`
+	SupplierName string  `json:"supplier"`
+	DeliveryTime int     `json:"delivery_time"`
+}
+
 type CakeDecorationRepository interface {
-	Create(user *User) error
-	Fetch() ([]User, error)
-	GetByEmail(email string) (User, error)
-	GetByID(id string) (User, error)
+	Create(decoration *CakeDecoration) error
+	FetchAll() ([]CakeDecoration, error)
+	Edit(decoration *CakeDecoration) error
+	Delete(article string) error
+}
+
+type CakeDecorationUsecase interface {
+	GetAll() ([]CakeDecoration, error)
+	Edit(cakeDecoration *CakeDecoration) error
+	Delete(article string) error
 }
