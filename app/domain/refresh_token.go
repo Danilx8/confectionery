@@ -14,4 +14,5 @@ type RefreshTokenUsecase interface {
 	CreateAccessToken(user *User, secret string, expiry int) (accessToken string, err error)
 	CreateRefreshToken(user *User, secret string, expiry int) (refreshToken string, err error)
 	ExtractLoginFromToken(requestToken string, secret string) (string, error)
+	ExtractRoleFromToken(requestToken string, secret string) (string, error)
 }

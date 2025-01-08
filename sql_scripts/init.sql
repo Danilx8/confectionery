@@ -35,7 +35,7 @@ CREATE TABLE `suppliers` (
 
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
-    id int(11) NOT NULL AUTO_INCREMENT,
+    id varchar(12) NOT NULL,
     date DATE NOT NULL,
     name varchar(255) NOT NULL,
     item varchar(255) NOT NULL,
@@ -44,6 +44,7 @@ CREATE TABLE `orders` (
     price decimal(10, 2),
     expected_fulfilment_date date,
     examples varchar(1000),
+    status varchar(20),
     PRIMARY KEY (id, date),
     FOREIGN KEY (item) REFERENCES `items`(name),
     FOREIGN KEY (orderer) REFERENCES `users`(login),

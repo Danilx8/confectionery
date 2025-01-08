@@ -27,15 +27,23 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 			return
 		}
 
-		userRole, err := tokenutil.ExtractRoleFromToken(authToken, secret)
+		login, err := tokenutil.ExtractLoginFromToken(authToken, secret)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
 			c.Abort()
 			return
 		}
 
-		r := strings.NewReplacer("\r", "")
-		c.Set("x-user-role", r.Replace(userRole))
+		role, err := tokenutil.ExtractRoleFromToken(authToken, secret)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
+			c.Abort()
+			return
+		}
+
+		r := strings.NewReplacer("/r", "")
+		c.Set("x-user-login", r.Replace(login))
+		c.Set("x-user-role", r.Replace(role))
 		c.Next()
 		return
 	}

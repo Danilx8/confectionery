@@ -10,6 +10,8 @@ import (
 )
 
 func Setup(env *bootstrap.Env, timeout time.Duration, db gorm.DB, gin *gin.Engine) {
+	//gin.Static("/assets", env.StorageLocation)
+
 	publicRouter := gin.Group("")
 	// All Public APIs
 	NewSignupRouter(env, timeout, db, publicRouter)
