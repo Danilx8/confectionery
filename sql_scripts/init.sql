@@ -132,3 +132,13 @@ CREATE TABLE `ingredient_specifications` (
     FOREIGN KEY (item) REFERENCES `items`(name),
     FOREIGN KEY (ingredient) REFERENCES `ingredients`(article)
 )
+
+DROP TABLE IF EXISTS `failures`;
+CREATE TABLE `failures`
+(
+    equipment     varchar(255)  NOT NULL,
+    failure_time  timestamp NOT NULL,
+    reason        varchar(255),
+    continue_time timestamp,
+    PRIMARY KEY (equipment, failure_time)
+)

@@ -31,6 +31,17 @@ type OrderRequest struct {
 	Examples    string `json:"examples"`
 }
 
+type OrderResponse struct {
+	ID                     string  `json:"id"`
+	Date                   string  `json:"date"`
+	Name                   string  `json:"name"`
+	Status                 string  `json:"status"`
+	Price                  float32 `json:"price"`
+	OrdererName            string  `json:"orderer"`
+	ExpectedFulfilmentDate string  `json:"expected_fulfilment_date"`
+	AssignedManagerName    string  `json:"assigned_manager"`
+}
+
 type StatusEnum int
 
 const (
@@ -61,6 +72,7 @@ type OrderRepository interface {
 	Create(order *Order) error
 	Fetch() ([]Order, error)
 	FetchById(id string) (*Order, error)
+	FetchByUser(userLogin string) ([]Order, error)
 	CountToday() (int64, error)
 	Update(order *Order) error
 	Delete(id string) error
@@ -70,6 +82,7 @@ type OrderUsecase interface {
 	Create(order *Order) error
 	Fetch() ([]Order, error)
 	GetByID(id string) (*Order, error)
+	FetchOwn(login string) ([]Order, error)
 	Update(order *Order) error
 	Delete(id string) error
 }

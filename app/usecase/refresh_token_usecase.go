@@ -33,3 +33,7 @@ func (rtu *refreshTokenUsecase) CreateRefreshToken(user *domain2.User, secret st
 func (rtu *refreshTokenUsecase) ExtractLoginFromToken(requestToken string, secret string) (string, error) {
 	return tokenutil.ExtractLoginFromToken(requestToken, secret)
 }
+
+func (rtu *refreshTokenUsecase) ExtractRoleFromToken(requestToken string, secret string) (string, error) {
+	return tokenutil.ExtractRoleFromToken(requestToken, secret)
+}

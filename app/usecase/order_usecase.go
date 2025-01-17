@@ -49,8 +49,19 @@ func (o orderUsecase) Create(order *domain.Order) error {
 }
 
 func (o orderUsecase) Fetch() ([]domain.Order, error) {
-	//TODO implement me
-	panic("implement me")
+	if users, err := o.orderRepository.Fetch(); err != nil {
+		return nil, err
+	} else {
+		return users, nil
+	}
+}
+
+func (o orderUsecase) FetchOwn(login string) ([]domain.Order, error) {
+	if users, err := o.orderRepository.FetchByUser(login); err != nil {
+		return nil, err
+	} else {
+		return users, err
+	}
 }
 
 func (o orderUsecase) GetByID(id string) (*domain.Order, error) {

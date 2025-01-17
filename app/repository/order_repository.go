@@ -31,6 +31,14 @@ func (o orderRepository) Fetch() ([]domain.Order, error) {
 	return orders, nil
 }
 
+func (o orderRepository) FetchByUser(userLogin string) ([]domain.Order, error) {
+	var orders []domain.Order
+	if result := o.database.Table("orders").Where("orderer_name = ?", userLogin).Find(&orders); result.Error != nil {
+		return nil, result.Error
+	}
+	return orders, nil
+}
+
 func (o orderRepository) FetchById(id string) (*domain.Order, error) {
 	var order *domain.Order
 	if result := o.database.Table("orders").Where("id = ?", id).First(&order); result.Error != nil {
