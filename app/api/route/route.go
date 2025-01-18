@@ -26,4 +26,6 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db gorm.DB, gin *gin.Engin
 	NewIngredientRoute(db, protectedRouter)
 	NewCakeDecorationRoute(db, protectedRouter)
 	NewOrderRoute(timeout, db, protectedRouter)
+	NewFailureRoute(db, protectedRouter)
+	NewOrdersHistoryRoute(db, protectedRouter)
 }

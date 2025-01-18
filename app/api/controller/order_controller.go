@@ -75,7 +75,6 @@ func (oc *OrderController) Create(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} []domain.OrderResponse
 // @Success 204 {object} domain.SuccessResponse
-// @Failure 400 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
 // @Router /order/all [get]
 func (oc *OrderController) Get(c *gin.Context) {

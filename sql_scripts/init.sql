@@ -134,11 +134,21 @@ CREATE TABLE `ingredient_specifications` (
 )
 
 DROP TABLE IF EXISTS `failures`;
-CREATE TABLE `failures`
-(
+CREATE TABLE `failures` (
     equipment     varchar(255)  NOT NULL,
     failure_time  timestamp NOT NULL,
     reason        varchar(255),
     continue_time timestamp,
     PRIMARY KEY (equipment, failure_time)
+)
+
+DROP TABLE IF EXISTS `orders_history`;
+CREATE TABLE `orders_history` (
+    id int NOT NULL,
+    order_id varchar(12) NOT NULL,
+    old_status varchar(20),
+    new_status varchar(20) NOT NULL,
+    time timestamp NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (order_id) REFERENCES `orders`(id)
 )

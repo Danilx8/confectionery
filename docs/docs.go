@@ -480,12 +480,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.SuccessResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -794,6 +788,34 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/history": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get all orders history",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.OrdersHistory"
+                            }
                         }
                     },
                     "500": {
@@ -1672,6 +1694,29 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.OrdersHistory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "newStatus": {
+                    "type": "string"
+                },
+                "oldStatus": {
+                    "type": "string"
+                },
+                "order": {
+                    "$ref": "#/definitions/domain.Order"
+                },
+                "orderId": {
+                    "type": "string"
+                },
+                "time": {
                     "type": "string"
                 }
             }
