@@ -14,6 +14,15 @@ func NewFailureController(failureRepository domain.FailureRepository) *FailureCo
 	return &FailureController{FailureRepository: failureRepository}
 }
 
+// RegisterFailure godoc
+// @Summary	Register a new failure manually
+// @Tags Failures
+// @Accepts json
+// @Produce json
+// @Success 200 {object} domain.Failure
+// @Failure 400 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Router /failure/register [post]
 func (fc *FailureController) RegisterFailure(c *gin.Context) {
 	var failure domain.Failure
 	if err := c.ShouldBind(&failure); err != nil {

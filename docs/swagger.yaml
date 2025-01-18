@@ -379,6 +379,26 @@ paths:
       summary: List all failures occurred in the system
       tags:
       - Failures
+  /failure/register:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Failure'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Register a new failure manually
+      tags:
+      - Failures
   /ingredient/delete:
     delete:
       consumes:
