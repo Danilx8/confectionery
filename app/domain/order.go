@@ -31,6 +31,17 @@ type OrderRequest struct {
 	Examples    string `json:"examples"`
 }
 
+type SpecificationRequest struct {
+	ID                     string  `json:"id"`
+	Price                  float32 `json:"price"`
+	ExpectedFulfilmentDate string  `json:"expected_fulfilment_date"`
+}
+
+type AssuranceRequest struct {
+	ID       string          `json:"id"`
+	Criteria map[string]bool `json:"criteria"`
+}
+
 type OrderResponse struct {
 	ID                     string  `json:"id"`
 	Date                   string  `json:"date"`
@@ -73,6 +84,7 @@ type OrderRepository interface {
 	Fetch() ([]Order, error)
 	FetchById(id string) (*Order, error)
 	FetchByUser(userLogin string) ([]Order, error)
+	FetchByStatus(status string) ([]Order, error)
 	CountToday() (int64, error)
 	Update(order *Order) error
 	Delete(id string) error
@@ -83,6 +95,8 @@ type OrderUsecase interface {
 	Fetch() ([]Order, error)
 	GetByID(id string) (*Order, error)
 	FetchOwn(login string) ([]Order, error)
+	FetchByStatus(status string) ([]Order, error)
 	Update(order *Order) error
 	Delete(id string) error
+	MapOrder(order *Order) OrderResponse
 }

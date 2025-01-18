@@ -409,7 +409,7 @@ const docTemplate = `{
                 "tags": [
                     "Orders"
                 ],
-                "summary": "Set status of a given order from new to accept",
+                "summary": "Set status of a given order from new to \"Specification\"",
                 "parameters": [
                     {
                         "description": "order id",
@@ -430,12 +430,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
@@ -514,8 +508,51 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.SuccessResponse"
                         }
                     },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "html/text"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Set status of a given order from production to assurance",
+                "parameters": [
+                    {
+                        "description": "order id",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.SuccessResponse"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
@@ -565,6 +602,46 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/cancelled": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get all orders with status \"Cancelled\"",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.OrderResponse"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/domain.SuccessResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -597,12 +674,6 @@ const docTemplate = `{
                         "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/domain.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     },
                     "500": {
@@ -648,12 +719,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
                     "409": {
                         "description": "Conflict",
                         "schema": {
@@ -692,12 +757,6 @@ const docTemplate = `{
                         "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/domain.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     },
                     "500": {
@@ -852,12 +911,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.SuccessResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -932,12 +985,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.SuccessResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -977,12 +1024,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
@@ -1027,12 +1068,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.SuccessResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -1067,8 +1102,53 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.SuccessResponse"
                         }
                     },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/specify": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Send ready specification and set current order status to \"Confirmation\"",
+                "parameters": [
+                    {
+                        "description": "scheme of order request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.SpecificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.SuccessResponse"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
@@ -1105,12 +1185,6 @@ const docTemplate = `{
                         "description": "No Content",
                         "schema": {
                             "$ref": "#/definitions/domain.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     },
                     "500": {
@@ -1156,8 +1230,53 @@ const docTemplate = `{
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/verdict": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Make a verdict on quality assurance",
+                "parameters": [
+                    {
+                        "description": "associative array of criteria with true for passed and false for not passed",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.AssuranceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/domain.ErrorResponse"
                         }
@@ -1458,6 +1577,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "domain.AssuranceRequest": {
+            "type": "object",
+            "properties": {
+                "criteria": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "boolean"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.CakeDecoration": {
             "type": "object",
             "properties": {
@@ -1758,6 +1891,20 @@ const docTemplate = `{
                 },
                 "refreshToken": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.SpecificationRequest": {
+            "type": "object",
+            "properties": {
+                "expected_fulfilment_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
                 }
             }
         },

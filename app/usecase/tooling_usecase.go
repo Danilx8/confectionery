@@ -17,7 +17,7 @@ func NewToolingUsecase(toolingRepository domain.ToolingRepository) domain.Toolin
 	}
 }
 
-func (tu *toolingUsecase) HydrateProperties(request domain.ToolingRequest) (*domain.Tooling, error) {
+func (tu *toolingUsecase) MapProperties(request domain.ToolingRequest) (*domain.Tooling, error) {
 	var tooling = domain.Tooling{
 		Marking: request.Name,
 		Type:    *request.Type,

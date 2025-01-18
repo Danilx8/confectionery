@@ -39,7 +39,7 @@ func (tc *ToolingController) Create(c *gin.Context) {
 		return
 	}
 
-	tooling, err := tc.ToolingUsecase.HydrateProperties(request)
+	tooling, err := tc.ToolingUsecase.MapProperties(request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -118,7 +118,7 @@ func (tc *ToolingController) Edit(c *gin.Context) {
 		return
 	}
 
-	tooling, err := tc.ToolingUsecase.HydrateProperties(request)
+	tooling, err := tc.ToolingUsecase.MapProperties(request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return

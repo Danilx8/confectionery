@@ -1,5 +1,14 @@
 basePath: /
 definitions:
+  domain.AssuranceRequest:
+    properties:
+      criteria:
+        additionalProperties:
+          type: boolean
+        type: object
+      id:
+        type: string
+    type: object
   domain.CakeDecoration:
     properties:
       amount:
@@ -197,6 +206,15 @@ definitions:
         type: string
       refreshToken:
         type: string
+    type: object
+  domain.SpecificationRequest:
+    properties:
+      expected_fulfilment_date:
+        type: string
+      id:
+        type: string
+      price:
+        type: number
     type: object
   domain.SuccessResponse:
     properties:
@@ -550,10 +568,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "409":
           description: Conflict
           schema:
@@ -562,7 +576,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-      summary: Set status of a given order from new to accept
+      summary: Set status of a given order from new to "Specification"
       tags:
       - Orders
   /order/all:
@@ -602,15 +616,43 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Assurance"
+      tags:
+      - Orders
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: order id
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-      summary: Get all orders with status "Assurance"
+      summary: Set status of a given order from production to assurance
       tags:
       - Orders
   /order/cancel:
@@ -635,11 +677,37 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
       summary: Cancel an order
+      tags:
+      - Orders
+  /order/cancelled:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Cancelled"
       tags:
       - Orders
   /order/complete:
@@ -657,10 +725,6 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -689,10 +753,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "409":
           description: Conflict
           schema:
@@ -719,10 +779,6 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -821,10 +877,6 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -873,10 +925,6 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -905,10 +953,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "409":
           description: Conflict
           schema:
@@ -935,10 +979,6 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -961,15 +1001,44 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Specification"
+      tags:
+      - Orders
+  /order/specify:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SpecificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-      summary: Get all orders with status "Specification"
+      summary: Send ready specification and set current order status to "Confirmation"
       tags:
       - Orders
   /order/supplement:
@@ -987,10 +1056,6 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/domain.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -1019,8 +1084,38 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-        "404":
-          description: Not Found
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Set status of a given order from accept to supplement
+      tags:
+      - Orders
+  /order/verdict:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: associative array of criteria with true for passed and false
+          for not passed
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.AssuranceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
         "409":
@@ -1031,7 +1126,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-      summary: Set status of a given order from accept to supplement
+      summary: Make a verdict on quality assurance
       tags:
       - Orders
   /refresh:

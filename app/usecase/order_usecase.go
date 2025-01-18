@@ -49,26 +49,34 @@ func (o orderUsecase) Create(order *domain.Order) error {
 }
 
 func (o orderUsecase) Fetch() ([]domain.Order, error) {
-	if users, err := o.orderRepository.Fetch(); err != nil {
+	if orders, err := o.orderRepository.Fetch(); err != nil {
 		return nil, err
 	} else {
-		return users, nil
+		return orders, nil
 	}
 }
 
 func (o orderUsecase) FetchOwn(login string) ([]domain.Order, error) {
-	if users, err := o.orderRepository.FetchByUser(login); err != nil {
+	if orders, err := o.orderRepository.FetchByUser(login); err != nil {
 		return nil, err
 	} else {
-		return users, err
+		return orders, err
 	}
 }
 
 func (o orderUsecase) GetByID(id string) (*domain.Order, error) {
-	if user, err := o.orderRepository.FetchById(id); err != nil {
+	if order, err := o.orderRepository.FetchById(id); err != nil {
 		return nil, err
 	} else {
-		return user, nil
+		return order, nil
+	}
+}
+
+func (o orderUsecase) FetchByStatus(status string) ([]domain.Order, error) {
+	if orders, err := o.orderRepository.FetchByStatus(status); err != nil {
+		return nil, err
+	} else {
+		return orders, nil
 	}
 }
 
@@ -82,4 +90,17 @@ func (o orderUsecase) Update(order *domain.Order) error {
 func (o orderUsecase) Delete(id string) error {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (o orderUsecase) MapOrder(order *domain.Order) domain.OrderResponse {
+	return domain.OrderResponse{
+		ID:                     order.ID,
+		Date:                   order.Date.String(),
+		Name:                   order.Name,
+		Status:                 order.Status,
+		Price:                  order.Price,
+		OrdererName:            order.OrdererName,
+		ExpectedFulfilmentDate: order.ExpectedFulfilmentDate.String(),
+		AssignedManagerName:    order.AssignedManagerName,
+	}
 }
