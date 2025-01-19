@@ -8,16 +8,20 @@ import (
 )
 
 type orderUsecase struct {
-	orderRepository domain.OrderRepository
+	orderRepository   domain.OrderRepository
+	historyRepository domain.OrdersHistoryRepository
 }
 
-func NewOrderUsecase(orderRepository domain.OrderRepository) domain.OrderUsecase {
-	return &orderUsecase{orderRepository: orderRepository}
+func NewOrderUsecase(orderRepository domain.OrderRepository, historyRepository domain.OrdersHistoryRepository) domain.OrderUsecase {
+	return &orderUsecase{
+		orderRepository:   orderRepository,
+		historyRepository: historyRepository,
+	}
 }
 
 func (o orderUsecase) Create(order *domain.Order) error {
 	var id strings.Builder
-	id.WriteString(time.Now().Format(time.RFC3339))
+	id.WriteString(strings.Join(strings.Split(time.Now().Format(time.DateOnly), "-")[:], ""))
 	fullName := strings.Split(order.Orderer.FullName, " ")
 
 	firstLetter := func(name string) string {
@@ -81,6 +85,19 @@ func (o orderUsecase) FetchByStatus(status string) ([]domain.Order, error) {
 }
 
 func (o orderUsecase) Update(order *domain.Order) error {
+	if oldOrder, err := o.orderRepository.FetchById(order.ID); err != nil {
+		return err
+	} else if oldOrder.Status != order.Status {
+		if err = o.historyRepository.Create(&domain.OrdersHistory{
+			Order:     *order,
+			OldStatus: oldOrder.Status,
+			NewStatus: order.Status,
+			Time:      time.Now().Format(time.DateTime),
+		}); err != nil {
+			return err
+		}
+	}
+
 	if err := o.orderRepository.Update(order); err != nil {
 		return err
 	}
@@ -88,8 +105,10 @@ func (o orderUsecase) Update(order *domain.Order) error {
 }
 
 func (o orderUsecase) Delete(id string) error {
-	//TODO implement me
-	panic("implement me")
+	if err := o.orderRepository.Delete(id); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o orderUsecase) MapOrder(order *domain.Order) domain.OrderResponse {

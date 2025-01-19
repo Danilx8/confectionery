@@ -14,9 +14,10 @@ import (
 func NewOrderRoute(timeout time.Duration, db gorm.DB, group *gin.RouterGroup) {
 	ur := repository.NewUserRepository(&db)
 	or := repository.NewOrderRepository(&db)
+	hr := repository.NewOrdersHistoryRepository(&db)
 	oc := controller.OrderController{
 		UserUsecase:  usecase.NewLoginUsecase(ur, timeout),
-		OrderUsecase: usecase.NewOrderUsecase(or),
+		OrderUsecase: usecase.NewOrderUsecase(or, hr),
 	}
 	group.POST("/order/create", middleware.RoleMiddleware([]string{
 		domain.RoleName[domain.Client],

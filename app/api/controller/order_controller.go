@@ -413,7 +413,7 @@ func (oc OrderController) AcceptNewOrder(c *gin.Context) {
 	//на «Составление спецификации»;
 
 	var id string
-	err := c.ShouldBind(id)
+	err := c.ShouldBind(&id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -462,7 +462,7 @@ func (oc *OrderController) Cancel(c *gin.Context) {
 	//согласен с условиями выполнения заказа и вносит предоплату;
 
 	var id string
-	err := c.ShouldBind(id)
+	err := c.ShouldBind(&id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -575,7 +575,7 @@ func (oc *OrderController) SetSupplement(c *gin.Context) {
 	//согласен с условиями выполнения заказа и вносит предоплату;
 
 	var id string
-	err := c.ShouldBind(id)
+	err := c.ShouldBind(&id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -617,7 +617,7 @@ func (oc OrderController) SetProduction(c *gin.Context) {
 	//менять статус «Закупка» на статус «Производство».
 
 	var id string
-	err := c.ShouldBind(id)
+	err := c.ShouldBind(&id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -659,7 +659,7 @@ func (oc OrderController) SetAssurance(c *gin.Context) {
 	//изменить статус на «Контроль»;
 
 	var id string
-	err := c.ShouldBind(id)
+	err := c.ShouldBind(&id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -701,7 +701,7 @@ func (oc OrderController) AssureQuality(c *gin.Context) {
 	//произвести контроль качества.
 
 	var request domain.AssuranceRequest
-	err := c.ShouldBind(request)
+	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -754,7 +754,7 @@ func (oc OrderController) SetComplete(c *gin.Context) {
 	//«Выполнен».
 
 	var id string
-	err := c.ShouldBind(id)
+	err := c.ShouldBind(&id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -793,8 +793,8 @@ func (oc *OrderController) Delete(c *gin.Context) {
 	//ЗАКАЗЧИК:
 	//может удалить новый заказ,
 
-	var id string
-	err := c.ShouldBind(&id)
+	tmp, err := c.GetRawData()
+	id := string(tmp)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
@@ -803,7 +803,7 @@ func (oc *OrderController) Delete(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	} else if order.Status != domain.StatusName[domain.New] {
-		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "You can't delete order which isn't new"})
+		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: fmt.Sprintf("You can't delete order %s which isn't new, but is %s", order.ID, order.Status)})
 		return
 	}
 
