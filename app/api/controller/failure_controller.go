@@ -46,7 +46,7 @@ func (fc *FailureController) RegisterFailure(c *gin.Context) {
 // @Success 204 {object} domain.SuccessResponse
 // @Failure 400 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
-// @Router /failure/get [get]
+// @Router /failure/list [get]
 func (fc *FailureController) ListFailures(c *gin.Context) {
 	if failures, err := fc.FailureRepository.FetchAll(); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})

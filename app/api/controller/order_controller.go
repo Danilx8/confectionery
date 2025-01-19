@@ -51,20 +51,35 @@ func (oc *OrderController) Create(c *gin.Context) {
 		return
 	}
 
-	var order *domain.Order
+	order := domain.Order{
+		Name:     request.Name,
+		Examples: request.Examples,
+		Date:     time.Now(),
+	}
 	if strings.Contains(user.Role, domain.RoleName[domain.ClientManager]) { // If order is placed by a manager
+		if orderer, err := oc.UserUsecase.GetUserByLogin(request.Orderer); err != nil {
+			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+			return
+		} else {
+			order.Orderer = *orderer
+		}
 		order.Status = domain.StatusName[domain.Specification]
 		order.AssignedManager = *user
-		order.OrdererName = request.Orderer
-	} else { // if order is placed by a client
+	} else if strings.Contains(user.Role, domain.RoleName[domain.Client]) { // if order is placed by a client
+		if manager, err := oc.UserUsecase.GetUserByLogin(request.Manager); err != nil {
+			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+			return
+		} else {
+			order.AssignedManager = *manager
+		}
 		order.Orderer = *user
-		order.AssignedManagerName = request.Manager
 		order.Status = domain.StatusName[domain.New]
-	} // no other option is available by design
+	} else {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid role"})
+		return
+	}
 
-	order.Examples = request.Examples
-
-	if err = oc.OrderUsecase.Create(order); err != nil {
+	if err = oc.OrderUsecase.Create(&order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
@@ -403,7 +418,9 @@ func (oc OrderController) AcceptNewOrder(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Status: domain.StatusName[domain.Specification],
+	}
 
 	if order, err = oc.OrderUsecase.GetByID(id); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
@@ -413,7 +430,6 @@ func (oc OrderController) AcceptNewOrder(c *gin.Context) {
 		return
 	}
 
-	order.Status = domain.StatusName[domain.Specification]
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -451,7 +467,9 @@ func (oc *OrderController) Cancel(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Status: domain.StatusName[domain.Cancelled],
+	}
 	role, exists := c.Get("x-user-role")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: "Current user role not found in context"})
@@ -473,7 +491,6 @@ func (oc *OrderController) Cancel(c *gin.Context) {
 		})
 	}
 
-	order.Status = domain.StatusName[domain.Cancelled]
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -509,7 +526,10 @@ func (oc *OrderController) Specify(c *gin.Context) {
 		return
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Price:  request.Price,
+		Status: domain.StatusName[domain.Confirmation],
+	}
 	if order, err = oc.OrderUsecase.GetByID(request.ID); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -520,8 +540,13 @@ func (oc *OrderController) Specify(c *gin.Context) {
 		return
 	}
 
-	order.Price = request.Price
-	order.ExpectedFulfilmentDate, err = time.Parse("YYYY-MM-DD hh:mm:ss", request.ExpectedFulfilmentDate)
+	if parse, err := time.Parse("YYYY-MM-DD hh:mm:ss", request.ExpectedFulfilmentDate); err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	} else {
+		order.ExpectedFulfilmentDate = &parse
+	}
+
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -555,7 +580,9 @@ func (oc *OrderController) SetSupplement(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Status: domain.StatusName[domain.Supplement],
+	}
 
 	if order, err = oc.OrderUsecase.GetByID(id); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
@@ -565,7 +592,6 @@ func (oc *OrderController) SetSupplement(c *gin.Context) {
 		return
 	}
 
-	order.Status = domain.StatusName[domain.Supplement]
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -596,7 +622,9 @@ func (oc OrderController) SetProduction(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Status: domain.StatusName[domain.Production],
+	}
 
 	if order, err = oc.OrderUsecase.GetByID(id); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
@@ -606,7 +634,6 @@ func (oc OrderController) SetProduction(c *gin.Context) {
 		return
 	}
 
-	order.Status = domain.StatusName[domain.Production]
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -637,7 +664,9 @@ func (oc OrderController) SetAssurance(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Status: domain.StatusName[domain.Assurance],
+	}
 
 	if order, err = oc.OrderUsecase.GetByID(id); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
@@ -647,7 +676,6 @@ func (oc OrderController) SetAssurance(c *gin.Context) {
 		return
 	}
 
-	order.Status = domain.StatusName[domain.Assurance]
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -678,7 +706,9 @@ func (oc OrderController) AssureQuality(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Status: domain.StatusName[domain.Ready],
+	}
 
 	if order, err = oc.OrderUsecase.GetByID(request.ID); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
@@ -697,7 +727,6 @@ func (oc OrderController) AssureQuality(c *gin.Context) {
 		}
 	}
 
-	order.Status = domain.StatusName[domain.Ready]
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -730,7 +759,9 @@ func (oc OrderController) SetComplete(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
 
-	var order *domain.Order
+	order := &domain.Order{
+		Status: domain.StatusName[domain.Complete],
+	}
 
 	if order, err = oc.OrderUsecase.GetByID(id); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
@@ -740,7 +771,6 @@ func (oc OrderController) SetComplete(c *gin.Context) {
 		return
 	}
 
-	order.Status = domain.StatusName[domain.Complete]
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -764,7 +794,7 @@ func (oc *OrderController) Delete(c *gin.Context) {
 	//может удалить новый заказ,
 
 	var id string
-	err := c.ShouldBind(id)
+	err := c.ShouldBind(&id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}

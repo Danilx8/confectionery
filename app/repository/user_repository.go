@@ -25,14 +25,14 @@ func (u userRepository) Create(user *domain.User) (*domain.User, error) {
 }
 
 func (u userRepository) FetchByLogin(login string) (*domain.User, error) {
-	var user domain.User
+	user := &domain.User{}
 
 	result := u.database.Table("users").Where("login = ?", login).First(&user)
 	if result.Error != nil {
 		return nil, fmt.Errorf("failed to fetch user with login %s: %w", login, result.Error)
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (u userRepository) Delete(login string) error {

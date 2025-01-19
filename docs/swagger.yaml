@@ -386,7 +386,7 @@ paths:
       summary: Get a list of all cake decorations
       tags:
       - Cake Decorations
-  /failure/get:
+  /failure/list:
     get:
       produces:
       - application/json

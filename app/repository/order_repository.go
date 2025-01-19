@@ -49,7 +49,7 @@ func (o orderRepository) FetchById(id string) (*domain.Order, error) {
 
 func (o orderRepository) FetchByStatus(status string) ([]domain.Order, error) {
 	var orders []domain.Order
-	if result := o.database.Table("orders").Where("status = ?", status); result.Error != nil {
+	if result := o.database.Table("orders").Where("status = ?", status).Find(&orders); result.Error != nil {
 		return nil, result.Error
 	}
 	return orders, nil

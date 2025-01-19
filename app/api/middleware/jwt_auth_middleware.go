@@ -41,7 +41,7 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 			return
 		}
 
-		r := strings.NewReplacer("/r", "")
+		r := strings.NewReplacer("\r", "")
 		c.Set("x-user-login", r.Replace(login))
 		c.Set("x-user-role", r.Replace(role))
 		c.Next()

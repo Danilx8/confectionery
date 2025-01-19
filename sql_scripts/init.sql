@@ -8,7 +8,7 @@ CREATE TABLE `users` (
     role varchar(255) NOT NULL,
     full_name varchar(255),
     photo_url varchar(510),
-    PRIMARY KEY (login, password),
+    PRIMARY KEY (login),
     UNIQUE (login)
 );
 
@@ -146,9 +146,10 @@ DROP TABLE IF EXISTS `orders_history`;
 CREATE TABLE `orders_history` (
     id int NOT NULL,
     order_id varchar(12) NOT NULL,
+    date date NOT NULL,
     old_status varchar(20),
     new_status varchar(20) NOT NULL,
     time timestamp NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (order_id) REFERENCES `orders`(id)
+    FOREIGN KEY (order_id, date) REFERENCES `orders`(id, date)
 )

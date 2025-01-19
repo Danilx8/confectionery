@@ -6,19 +6,19 @@ import (
 )
 
 type Order struct {
-	ID                     string    `gorm:"primaryKey;column:id"`
-	Date                   time.Time `gorm:"primaryKey;column:date"`
-	Name                   string    `gorm:"column:name"`
-	ItemName               string    `gorm:"column:item"`
-	Item                   Item      `gorm:"column:item;foreignKey:ItemName"`
-	OrdererName            string    `gorm:"column:orderer"`
-	Orderer                User      `gorm:"column:orderer;foreignKey:OrdererName"`
-	AssignedManagerName    string    `gorm:"column:assigned_manager"`
-	AssignedManager        User      `gorm:"column:assigned_manager;foreignKey:AssignedManagerName"`
-	Price                  float32   `gorm:"column:price"`
-	ExpectedFulfilmentDate time.Time `gorm:"column:expected_fulfilment_date"`
-	Examples               string    `gorm:"column:examples"`
-	Status                 string    `gorm:"column:status"`
+	ID                     string     `gorm:"primaryKey;column:id"`
+	Date                   time.Time  `gorm:"primaryKey;column:date"`
+	Name                   string     `gorm:"column:name"`
+	ItemName               string     `gorm:"column:item"`
+	Item                   Item       `gorm:"column:item;foreignKey:ItemName;references:name"`
+	OrdererName            string     `gorm:"column:orderer"`
+	Orderer                User       `gorm:"column:orderer;foreignKey:OrdererName;references:login"`
+	AssignedManagerName    string     `gorm:"column:assigned_manager"`
+	AssignedManager        User       `gorm:"column:assigned_manager;foreignKey:AssignedManagerName;references:login"`
+	Price                  float32    `gorm:"column:price"`
+	ExpectedFulfilmentDate *time.Time `gorm:"column:expected_fulfilment_date"`
+	Examples               string     `gorm:"column:examples"`
+	Status                 string     `gorm:"column:status"`
 }
 
 type OrderRequest struct {

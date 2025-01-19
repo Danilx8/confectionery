@@ -150,7 +150,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/failure/get": {
+        "/failure/list": {
             "get": {
                 "produces": [
                     "application/json"

@@ -17,8 +17,8 @@ func NewOrderUsecase(orderRepository domain.OrderRepository) domain.OrderUsecase
 
 func (o orderUsecase) Create(order *domain.Order) error {
 	var id strings.Builder
-	id.WriteString(time.Now().Format("DDMMYYYY"))
-	fullName := strings.Split(order.OrdererName, " ")
+	id.WriteString(time.Now().Format(time.RFC3339))
+	fullName := strings.Split(order.Orderer.FullName, " ")
 
 	firstLetter := func(name string) string {
 		if len(name) > 0 {
