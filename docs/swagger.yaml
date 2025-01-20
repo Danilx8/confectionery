@@ -1,0 +1,1312 @@
+basePath: /
+definitions:
+  domain.AssuranceRequest:
+    properties:
+      criteria:
+        additionalProperties:
+          type: boolean
+        type: object
+      id:
+        type: string
+    type: object
+  domain.CakeDecoration:
+    properties:
+      amount:
+        type: integer
+      article:
+        type: string
+      costPrice:
+        type: number
+      image:
+        type: string
+      name:
+        type: string
+      supplier:
+        $ref: '#/definitions/domain.Supplier'
+      supplierName:
+        type: string
+      type:
+        type: string
+      unit:
+        type: string
+      weight:
+        type: number
+    type: object
+  domain.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.Failure:
+    properties:
+      continueTime:
+        type: string
+      equipment:
+        type: string
+      failureTime:
+        type: string
+      reason:
+        type: string
+    type: object
+  domain.Ingredient:
+    properties:
+      amount:
+        type: integer
+      article:
+        type: string
+      costPrice:
+        type: number
+      gost:
+        type: string
+      image:
+        type: string
+      ingredientType:
+        type: string
+      name:
+        type: string
+      packing:
+        type: string
+      specs:
+        type: string
+      supplier:
+        $ref: '#/definitions/domain.Supplier'
+      supplierName:
+        type: string
+      unit:
+        type: string
+    type: object
+  domain.Item:
+    properties:
+      name:
+        type: string
+      size:
+        type: string
+    type: object
+  domain.LoginRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  domain.LoginResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+      role:
+        type: string
+    type: object
+  domain.Order:
+    properties:
+      assignedManager:
+        $ref: '#/definitions/domain.User'
+      assignedManagerName:
+        type: string
+      date:
+        type: string
+      examples:
+        type: string
+      expectedFulfilmentDate:
+        type: string
+      id:
+        type: string
+      item:
+        $ref: '#/definitions/domain.Item'
+      itemName:
+        type: string
+      name:
+        type: string
+      orderer:
+        $ref: '#/definitions/domain.User'
+      ordererName:
+        type: string
+      price:
+        type: number
+      status:
+        type: string
+    type: object
+  domain.OrderRequest:
+    properties:
+      description:
+        type: string
+      examples:
+        type: string
+      id:
+        type: string
+      manager:
+        type: string
+      name:
+        type: string
+      orderer:
+        type: string
+      size:
+        type: string
+    type: object
+  domain.OrderResponse:
+    properties:
+      assigned_manager:
+        type: string
+      date:
+        type: string
+      expected_fulfilment_date:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      orderer:
+        type: string
+      price:
+        type: number
+      status:
+        type: string
+    type: object
+  domain.OrdersHistory:
+    properties:
+      id:
+        type: integer
+      newStatus:
+        type: string
+      oldStatus:
+        type: string
+      order:
+        $ref: '#/definitions/domain.Order'
+      orderId:
+        type: string
+      time:
+        type: string
+    type: object
+  domain.RefreshTokenResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  domain.SignupRequest:
+    properties:
+      fullName:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  domain.SignupResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  domain.SpecificationRequest:
+    properties:
+      expected_fulfilment_date:
+        type: string
+      id:
+        type: string
+      price:
+        type: string
+    type: object
+  domain.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.Supplier:
+    properties:
+      address:
+        type: string
+      deliveryTime:
+        description: в часах
+        type: integer
+      name:
+        type: string
+    type: object
+  domain.Tooling:
+    properties:
+      marking:
+        type: string
+      properties:
+        type: string
+      type:
+        $ref: '#/definitions/domain.ToolingType'
+      typeName:
+        type: string
+    type: object
+  domain.ToolingRequest:
+    properties:
+      acquireTime:
+        type: string
+      amount:
+        type: integer
+      decayLevel:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      supplier:
+        $ref: '#/definitions/domain.Supplier'
+      type:
+        $ref: '#/definitions/domain.ToolingType'
+    type: object
+  domain.ToolingResponse:
+    properties:
+      age:
+        type: integer
+      amount:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  domain.ToolingType:
+    properties:
+      name:
+        type: string
+    type: object
+  domain.User:
+    properties:
+      fullName:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+      photoURL:
+        type: string
+      role:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Описание работы сервера
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /decoration/delete:
+    delete:
+      consumes:
+      - application/text
+      parameters:
+      - description: Article of a cake decoration to be deleted
+        in: body
+        name: Article
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete a given cake decoration by its article
+      tags:
+      - Cake Decorations
+  /decoration/edit:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of cake decoration
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CakeDecoration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.CakeDecoration'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Edit a given decoration
+      tags:
+      - Cake Decorations
+  /decoration/get:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.CakeDecoration'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get a list of all cake decorations
+      tags:
+      - Cake Decorations
+  /failure/list:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Failure'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: List all failures occurred in the system
+      tags:
+      - Failures
+  /failure/register:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Failure'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Register a new failure manually
+      tags:
+      - Failures
+  /ingredient/delete:
+    delete:
+      consumes:
+      - application/text
+      parameters:
+      - description: Article of an ingredient to be deleted
+        in: body
+        name: Article
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete a given ingredient by its marking
+      tags:
+      - Ingredients
+  /ingredient/edit:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of ingredient
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Ingredient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Ingredient'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Edit a given ingredient
+      tags:
+      - Ingredients
+  /ingredient/get:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Ingredient'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get a list of all ingredients
+      tags:
+      - Ingredients
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Login of user
+      tags:
+      - Authorisation
+  /order/accept:
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: order id
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Set status of a given order from new to "Specification"
+      tags:
+      - Orders
+  /order/all:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders
+      tags:
+      - Orders
+  /order/assurance:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Assurance"
+      tags:
+      - Orders
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: order id
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Set status of a given order from production to assurance
+      tags:
+      - Orders
+  /order/cancel:
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Cancel an order
+      tags:
+      - Orders
+  /order/cancelled:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Cancelled"
+      tags:
+      - Orders
+  /order/complete:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Complete"
+      tags:
+      - Orders
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: order id
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Set status of a given order from ready to complete
+      tags:
+      - Orders
+  /order/confirmation:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Confirmation"
+      tags:
+      - Orders
+  /order/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.OrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Order'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Create a new order
+      tags:
+      - Orders
+  /order/delete:
+    delete:
+      consumes:
+      - html/text
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete an order
+      tags:
+      - Orders
+  /order/history:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrdersHistory'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders history
+      tags:
+      - Orders
+  /order/new:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "New"
+      tags:
+      - Orders
+  /order/own:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders of current logged-in user
+      tags:
+      - Orders
+  /order/production:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Production"
+      tags:
+      - Orders
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: order id
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Set status of a given order from supplement to production
+      tags:
+      - Orders
+  /order/ready:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Ready"
+      tags:
+      - Orders
+  /order/specification:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Specification"
+      tags:
+      - Orders
+  /order/specify:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SpecificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Send ready specification and set current order status to "Confirmation"
+      tags:
+      - Orders
+  /order/supplement:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.OrderResponse'
+            type: array
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all orders with status "Supplement"
+      tags:
+      - Orders
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: order id
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Set status of a given order from accept to supplement
+      tags:
+      - Orders
+  /order/verdict:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: associative array of criteria with true for passed and false
+          for not passed
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.AssuranceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Make a verdict on quality assurance
+      tags:
+      - Orders
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.RefreshTokenResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RefreshTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - Tokens
+  /signup:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SignupResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Signup of clients
+      tags:
+      - Authorisation
+  /tooling/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ToolingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Tooling'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Create a new tooling
+      tags:
+      - Toolings
+  /tooling/delete:
+    delete:
+      consumes:
+      - application/text
+      parameters:
+      - description: ID of a tooling to be deleted
+        in: body
+        name: Tooling_ID
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete a tooling
+      tags:
+      - Toolings
+  /tooling/edit:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: scheme of login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ToolingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Tooling'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Update a tooling
+      tags:
+      - Toolings
+  /tooling/get:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.ToolingResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get a list of all toolings
+      tags:
+      - Toolings
+swagger: "2.0"

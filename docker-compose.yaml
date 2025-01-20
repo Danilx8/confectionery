@@ -1,31 +1,38 @@
-version: "3.8"
-
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: app
-    container_name: app
-    restart: unless-stopped
-    env_file: .env
+  db:
+    image:  mysql:9.0
+    command: --local-infile=1;
     ports:
-      - "$PORT:$PORT"
-    depends_on:
-      - mongodb
-
-  mongodb:
-    image: mongo:6.0
-    container_name: mongodb
-    restart: unless-stopped
-    env_file: .env
+      - "${DB_PORT}:3306"
+    restart: always
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=$DB_USER
-      - MONGO_INITDB_ROOT_PASSWORD=$DB_PASS
-    ports:
-      - "$DB_PORT:$DB_PORT"
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=Europe/Moscow
     volumes:
-      - dbdata:/data/db
+      - ./source_database:/var/lib/mysql
+      - ./sql_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  adminer:
+    image: adminer
+    ports:
+      - "8082:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      - db
+
+  app:
+    build:
+      dockerfile: Dockerfile.app
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - "${SERVER_ADDRESS}:8080"
 
 volumes:
-  dbdata:
+  source_database:
+    driver: local
