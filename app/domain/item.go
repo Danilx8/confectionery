@@ -9,6 +9,19 @@ type Item struct {
 	Size string `gorm:"column:size"`
 }
 
+type ItemSpecificationsResponse struct {
+	Ingredients []IngredientSpecificationResponse     `json:"ingredients"`
+	Decorations []CakeDecorationSpecificationResponse `json:"decorations"`
+	Premades    []PremadeSpecificationResponse        `json:"premades"`
+	Steps       string                                `json:"steps"`
+	Description string                                `json:"description"`
+}
+
 type ItemRepository interface {
 	Fetch() ([]Item, error)
+}
+
+type ItemUseCase interface {
+	FetchAll() ([]Item, error)
+	FetchRequired(name string) (ItemSpecificationsResponse, error)
 }

@@ -5,14 +5,18 @@ import (
 )
 
 type IngredientSpecification struct {
-	ItemID int  `gorm:"primaryKey;column:item_id"`
-	Item   Item `gorm:"primaryKey;column:item_id;foreignKey:ItemID"`
-	Amount int  `gorm:"column:amount"`
+	ItemName       string     `gorm:"primaryKey;column:item"`
+	Item           Item       `gorm:"primaryKey;column:item;foreignKey:ItemName"`
+	IngredientName string     `gorm:"primaryKey;column:ingredient"`
+	Ingredient     Ingredient `gorm:"primaryKey;column:ingredient;foreignKey:IngredientName"`
+	Amount         int        `gorm:"column:amount"`
+}
+
+type IngredientSpecificationResponse struct {
+	Name           string `json:"name"`
+	RequiredAmount int    `json:"required_amount"`
 }
 
 type IngredientSpecificationRepository interface {
-	Create(user *User) error
-	Fetch() ([]User, error)
-	GetByEmail(email string) (User, error)
-	GetByID(id string) (User, error)
+	FetchByItem(item string) ([]IngredientSpecification, error)
 }

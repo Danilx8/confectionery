@@ -353,7 +353,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Orders"
+                    "Items"
                 ],
                 "summary": "Get all items",
                 "responses": {
@@ -364,6 +364,51 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/domain.Item"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/item/specifications": {
+            "post": {
+                "consumes": [
+                    "html/text"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Get specifications of a posted item",
+                "parameters": [
+                    {
+                        "description": "scheme of order request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ItemSpecificationsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
                         }
                     },
                     "500": {
@@ -1654,6 +1699,17 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.CakeDecorationSpecificationResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "required_amount": {
+                    "type": "integer"
+                }
+            }
+        },
         "domain.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -1720,6 +1776,17 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.IngredientSpecificationResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "required_amount": {
+                    "type": "integer"
+                }
+            }
+        },
         "domain.Item": {
             "type": "object",
             "properties": {
@@ -1727,6 +1794,35 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "size": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.ItemSpecificationsResponse": {
+            "type": "object",
+            "properties": {
+                "decorations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.CakeDecorationSpecificationResponse"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.IngredientSpecificationResponse"
+                    }
+                },
+                "premades": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.PremadeSpecificationResponse"
+                    }
+                },
+                "steps": {
                     "type": "string"
                 }
             }
@@ -1882,6 +1978,17 @@ const docTemplate = `{
                 },
                 "time": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.PremadeSpecificationResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "required_amount": {
+                    "type": "integer"
                 }
             }
         },

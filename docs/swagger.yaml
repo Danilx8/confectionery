@@ -32,6 +32,13 @@ definitions:
       weight:
         type: number
     type: object
+  domain.CakeDecorationSpecificationResponse:
+    properties:
+      name:
+        type: string
+      required_amount:
+        type: integer
+    type: object
   domain.ErrorResponse:
     properties:
       message:
@@ -75,11 +82,37 @@ definitions:
       unit:
         type: string
     type: object
+  domain.IngredientSpecificationResponse:
+    properties:
+      name:
+        type: string
+      required_amount:
+        type: integer
+    type: object
   domain.Item:
     properties:
       name:
         type: string
       size:
+        type: string
+    type: object
+  domain.ItemSpecificationsResponse:
+    properties:
+      decorations:
+        items:
+          $ref: '#/definitions/domain.CakeDecorationSpecificationResponse'
+        type: array
+      description:
+        type: string
+      ingredients:
+        items:
+          $ref: '#/definitions/domain.IngredientSpecificationResponse'
+        type: array
+      premades:
+        items:
+          $ref: '#/definitions/domain.PremadeSpecificationResponse'
+        type: array
+      steps:
         type: string
     type: object
   domain.LoginRequest:
@@ -182,6 +215,13 @@ definitions:
         type: string
       time:
         type: string
+    type: object
+  domain.PremadeSpecificationResponse:
+    properties:
+      name:
+        type: string
+      required_amount:
+        type: integer
     type: object
   domain.RefreshTokenResponse:
     properties:
@@ -532,7 +572,36 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       summary: Get all items
       tags:
-      - Orders
+      - Items
+  /item/specifications:
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.ItemSpecificationsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get specifications of a posted item
+      tags:
+      - Items
   /login:
     post:
       consumes:

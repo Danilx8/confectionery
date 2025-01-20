@@ -5,16 +5,18 @@ import (
 )
 
 type PremadeSpecification struct {
-	ItemName    int  `gorm:"primaryKey;column:item"`
-	Item        Item `gorm:"primaryKey;column:item;foreignKey:ItemName"`
-	PremadeName int  `gorm:"primaryKey;column:premade"`
-	Premade     Item `gorm:"primaryKey;column:premade;foreignKey:PremadeName"`
-	Amount      int  `gorm:"column:amount"`
+	ItemName    string `gorm:"primaryKey;column:item"`
+	Item        Item   `gorm:"primaryKey;column:item;foreignKey:ItemName"`
+	PremadeName string `gorm:"primaryKey;column:premade"`
+	Premade     Item   `gorm:"primaryKey;column:premade;foreignKey:PremadeName"`
+	Amount      int    `gorm:"column:amount"`
+}
+
+type PremadeSpecificationResponse struct {
+	Name           string `json:"name"`
+	RequiredAmount int    `json:"required_amount"`
 }
 
 type PremadeSpecificationRepository interface {
-	Create(user *User) error
-	Fetch() ([]User, error)
-	GetByEmail(email string) (User, error)
-	GetByID(id string) (User, error)
+	FetchByItem(item string) ([]PremadeSpecification, error)
 }

@@ -12,9 +12,11 @@ type CakeDecorationSpecification struct {
 	Amount             int            `gorm:"column:amount"`
 }
 
+type CakeDecorationSpecificationResponse struct {
+	Name           string `json:"name"`
+	RequiredAmount int    `json:"required_amount"`
+}
+
 type CakeDecorationSpecificationRepository interface {
-	Create(user *User) error
-	Fetch() ([]User, error)
-	GetByEmail(email string) (User, error)
-	GetByID(id string) (User, error)
+	FetchByItem(item string) ([]CakeDecorationSpecification, error)
 }
