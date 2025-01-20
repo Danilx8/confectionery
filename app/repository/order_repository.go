@@ -57,7 +57,7 @@ func (o orderRepository) FetchByStatus(status string) ([]domain.Order, error) {
 
 func (o orderRepository) CountToday() (int64, error) {
 	var count int64
-	if result := o.database.Table("orders").Where("date = ?", time.Now().Format("YYYY-MM-DD")).
+	if result := o.database.Table("orders").Where("date = ?", time.Now().Format(time.DateOnly)).
 		Count(&count); result.Error != nil {
 		return 0, result.Error
 	}

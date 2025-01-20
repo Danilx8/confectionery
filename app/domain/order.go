@@ -15,7 +15,7 @@ type Order struct {
 	Orderer                User       `gorm:"column:orderer;foreignKey:OrdererName;references:login"`
 	AssignedManagerName    string     `gorm:"column:assigned_manager"`
 	AssignedManager        User       `gorm:"column:assigned_manager;foreignKey:AssignedManagerName;references:login"`
-	Price                  float32    `gorm:"column:price"`
+	Price                  float64    `gorm:"column:price"`
 	ExpectedFulfilmentDate *time.Time `gorm:"column:expected_fulfilment_date"`
 	Examples               string     `gorm:"column:examples"`
 	Status                 string     `gorm:"column:status"`
@@ -32,9 +32,9 @@ type OrderRequest struct {
 }
 
 type SpecificationRequest struct {
-	ID                     string  `json:"id"`
-	Price                  float32 `json:"price"`
-	ExpectedFulfilmentDate string  `json:"expected_fulfilment_date"`
+	ID                     string `json:"id"`
+	Price                  string `json:"price"`
+	ExpectedFulfilmentDate string `json:"expected_fulfilment_date"`
 }
 
 type AssuranceRequest struct {
@@ -47,7 +47,7 @@ type OrderResponse struct {
 	Date                   string  `json:"date"`
 	Name                   string  `json:"name"`
 	Status                 string  `json:"status"`
-	Price                  float32 `json:"price"`
+	Price                  float64 `json:"price"`
 	OrdererName            string  `json:"orderer"`
 	ExpectedFulfilmentDate string  `json:"expected_fulfilment_date"`
 	AssignedManagerName    string  `json:"assigned_manager"`

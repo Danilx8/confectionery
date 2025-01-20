@@ -214,7 +214,7 @@ definitions:
       id:
         type: string
       price:
-        type: number
+        type: string
     type: object
   domain.SuccessResponse:
     properties:

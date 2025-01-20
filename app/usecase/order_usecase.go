@@ -90,6 +90,7 @@ func (o orderUsecase) Update(order *domain.Order) error {
 	} else if oldOrder.Status != order.Status {
 		if err = o.historyRepository.Create(&domain.OrdersHistory{
 			Order:     *order,
+			Date:      time.Now().Format(time.DateOnly),
 			OldStatus: oldOrder.Status,
 			NewStatus: order.Status,
 			Time:      time.Now().Format(time.DateTime),

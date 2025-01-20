@@ -1904,7 +1904,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "price": {
-                    "type": "number"
+                    "type": "string"
                 }
             }
         },

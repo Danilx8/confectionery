@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -412,14 +413,21 @@ func (oc OrderController) AcceptNewOrder(c *gin.Context) {
 	//есть стать его менеджером), после чего статус заказа меняется
 	//на «Составление спецификации»;
 
-	var id string
-	err := c.ShouldBind(&id)
+	tmp, err := c.GetRawData()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
+	id := string(tmp)
 
 	order := &domain.Order{
 		Status: domain.StatusName[domain.Specification],
+	}
+
+	login, exists := c.Get("x-user-login")
+	if !exists {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Couldn't find current user id"})
+		return
 	}
 
 	if order, err = oc.OrderUsecase.GetByID(id); err != nil {
@@ -427,6 +435,9 @@ func (oc OrderController) AcceptNewOrder(c *gin.Context) {
 		return
 	} else if order.Status != domain.StatusName[domain.New] {
 		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "Order is not new"})
+		return
+	} else if order.OrdererName != login && order.AssignedManagerName != login {
+		c.JSON(http.StatusForbidden, domain.ErrorResponse{Message: "You are neither the order's orderer nor assigned manager"})
 		return
 	}
 
@@ -461,11 +472,12 @@ func (oc *OrderController) Cancel(c *gin.Context) {
 	//отказывается от заявки, или на статус «Закупка», если клиент
 	//согласен с условиями выполнения заказа и вносит предоплату;
 
-	var id string
-	err := c.ShouldBind(&id)
+	tmp, err := c.GetRawData()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
 	}
+	id := string(tmp)
 
 	order := &domain.Order{
 		Status: domain.StatusName[domain.Cancelled],
@@ -473,6 +485,12 @@ func (oc *OrderController) Cancel(c *gin.Context) {
 	role, exists := c.Get("x-user-role")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: "Current user role not found in context"})
+		return
+	}
+
+	login, exists := c.Get("x-user-login")
+	if !exists {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Couldn't find current user id"})
 		return
 	}
 
@@ -489,6 +507,10 @@ func (oc *OrderController) Cancel(c *gin.Context) {
 		c.JSON(http.StatusConflict, domain.ErrorResponse{
 			Message: "You can cancel orders only with status \"New\" or \"Confirmation\"",
 		})
+		return
+	} else if order.OrdererName != login && order.AssignedManagerName != login {
+		c.JSON(http.StatusForbidden, domain.ErrorResponse{Message: "You are neither the order's orderer nor assigned manager"})
+		return
 	}
 
 	if err = oc.OrderUsecase.Update(order); err != nil {
@@ -526,26 +548,41 @@ func (oc *OrderController) Specify(c *gin.Context) {
 		return
 	}
 
-	order := &domain.Order{
-		Price:  request.Price,
-		Status: domain.StatusName[domain.Confirmation],
+	login, exists := c.Get("x-user-login")
+	if !exists {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Couldn't find current user id"})
+		return
 	}
+
+	price, err := strconv.ParseFloat(request.Price, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	order := &domain.Order{}
 	if order, err = oc.OrderUsecase.GetByID(request.ID); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	} else if order.Status != domain.StatusName[domain.Specification] {
 		c.JSON(http.StatusNotAcceptable, domain.ErrorResponse{
-			Message: "You can't set specification for orders not in status \"Specification\""},
+			Message: fmt.Sprintf("%s == %s You can't set specification for orders not in status \"Specification\"", order.Status, domain.StatusName[domain.Specification])},
 		)
+		return
+	} else if order.OrdererName != login && order.AssignedManagerName != login {
+		c.JSON(http.StatusForbidden, domain.ErrorResponse{Message: "You aren't the order's assigned manager"})
 		return
 	}
 
-	if parse, err := time.Parse("YYYY-MM-DD hh:mm:ss", request.ExpectedFulfilmentDate); err != nil {
+	if parse, err := time.Parse(time.DateOnly, request.ExpectedFulfilmentDate); err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	} else {
 		order.ExpectedFulfilmentDate = &parse
 	}
+
+	order.Price = price
+	order.Status = domain.StatusName[domain.Confirmation]
 
 	if err = oc.OrderUsecase.Update(order); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
@@ -574,10 +611,17 @@ func (oc *OrderController) SetSupplement(c *gin.Context) {
 	//отказывается от заявки, или на статус «Закупка», если клиент
 	//согласен с условиями выполнения заказа и вносит предоплату;
 
-	var id string
-	err := c.ShouldBind(&id)
+	tmp, err := c.GetRawData()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+	id := string(tmp)
+
+	login, exists := c.Get("x-user-login")
+	if !exists {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Couldn't find current user id"})
+		return
 	}
 
 	order := &domain.Order{
@@ -589,6 +633,9 @@ func (oc *OrderController) SetSupplement(c *gin.Context) {
 		return
 	} else if order.Status != domain.StatusName[domain.Confirmation] {
 		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "Order is not being confirmed"})
+		return
+	} else if order.OrdererName != login && order.AssignedManagerName != login {
+		c.JSON(http.StatusForbidden, domain.ErrorResponse{Message: "You aren't the order's assigned manager"})
 		return
 	}
 
@@ -616,11 +663,11 @@ func (oc OrderController) SetProduction(c *gin.Context) {
 	//после поступления ингредиентов и украшений для торта может
 	//менять статус «Закупка» на статус «Производство».
 
-	var id string
-	err := c.ShouldBind(&id)
+	tmp, err := c.GetRawData()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
+	id := string(tmp)
 
 	order := &domain.Order{
 		Status: domain.StatusName[domain.Production],
@@ -658,11 +705,11 @@ func (oc OrderController) SetAssurance(c *gin.Context) {
 	//после выполнения работ по производству заказа может
 	//изменить статус на «Контроль»;
 
-	var id string
-	err := c.ShouldBind(&id)
+	tmp, err := c.GetRawData()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 	}
+	id := string(tmp)
 
 	order := &domain.Order{
 		Status: domain.StatusName[domain.Assurance],
@@ -753,10 +800,16 @@ func (oc OrderController) SetComplete(c *gin.Context) {
 	//полной оплаты может сменить статус с «Готов» на
 	//«Выполнен».
 
-	var id string
-	err := c.ShouldBind(&id)
+	tmp, err := c.GetRawData()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+	}
+	id := string(tmp)
+
+	login, exists := c.Get("x-user-login")
+	if !exists {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Couldn't find current user id"})
+		return
 	}
 
 	order := &domain.Order{
@@ -768,6 +821,9 @@ func (oc OrderController) SetComplete(c *gin.Context) {
 		return
 	} else if order.Status != domain.StatusName[domain.Ready] {
 		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "Order is not ready"})
+		return
+	} else if order.OrdererName != login && order.AssignedManagerName != login {
+		c.JSON(http.StatusForbidden, domain.ErrorResponse{Message: "You aren't the order's assigned manager"})
 		return
 	}
 
@@ -794,9 +850,15 @@ func (oc *OrderController) Delete(c *gin.Context) {
 	//может удалить новый заказ,
 
 	tmp, err := c.GetRawData()
-	id := string(tmp)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+	}
+	id := string(tmp)
+
+	login, exists := c.Get("x-user-login")
+	if !exists {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Couldn't find current user id"})
+		return
 	}
 
 	if order, err := oc.OrderUsecase.GetByID(id); err != nil {
@@ -804,6 +866,9 @@ func (oc *OrderController) Delete(c *gin.Context) {
 		return
 	} else if order.Status != domain.StatusName[domain.New] {
 		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: fmt.Sprintf("You can't delete order %s which isn't new, but is %s", order.ID, order.Status)})
+		return
+	} else if order.OrdererName != login && order.AssignedManagerName != login {
+		c.JSON(http.StatusForbidden, domain.ErrorResponse{Message: "It's not your order"})
 		return
 	}
 
