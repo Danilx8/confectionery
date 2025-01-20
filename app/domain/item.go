@@ -10,8 +10,5 @@ type Item struct {
 }
 
 type ItemRepository interface {
-	Create(user *User) error
-	Fetch() ([]User, error)
-	GetByEmail(email string) (User, error)
-	GetByID(id string) (User, error)
+	Fetch() ([]Item, error)
 }

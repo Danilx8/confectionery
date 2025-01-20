@@ -347,6 +347,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/item/all": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get all items",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Item"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "consumes": [
@@ -1834,6 +1862,9 @@ const docTemplate = `{
         "domain.OrdersHistory": {
             "type": "object",
             "properties": {
+                "date": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },

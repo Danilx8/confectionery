@@ -168,6 +168,8 @@ definitions:
     type: object
   domain.OrdersHistory:
     properties:
+      date:
+        type: string
       id:
         type: integer
       newStatus:
@@ -513,6 +515,24 @@ paths:
       summary: Get a list of all ingredients
       tags:
       - Ingredients
+  /item/all:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Item'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all items
+      tags:
+      - Orders
   /login:
     post:
       consumes:
