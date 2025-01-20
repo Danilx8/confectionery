@@ -13,7 +13,7 @@ type CakeDecorationSpecification struct {
 }
 
 type CakeDecorationSpecificationResponse struct {
-	Name           string `json:"name"`
+	Article        string `json:"article"`
 	RequiredAmount int    `json:"required_amount"`
 }
 

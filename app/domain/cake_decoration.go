@@ -30,6 +30,7 @@ type CakeDecorationResponse struct {
 type CakeDecorationRepository interface {
 	Create(decoration *CakeDecoration) error
 	FetchAll() ([]CakeDecoration, error)
+	FetchByID(id string) (*CakeDecoration, error)
 	Edit(decoration *CakeDecoration) error
 	Delete(article string) error
 }

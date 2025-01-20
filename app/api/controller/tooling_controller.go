@@ -30,7 +30,7 @@ func (tc *ToolingController) Create(c *gin.Context) {
 	}
 
 	if request.Name == "" {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Name field can't be empty"})
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Article field can't be empty"})
 		return
 	}
 

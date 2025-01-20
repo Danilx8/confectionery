@@ -31,6 +31,15 @@ func (i ingredientRepository) Fetch() ([]domain.Ingredient, error) {
 	return ingredients, nil
 }
 
+func (i ingredientRepository) FetchById(id string) (*domain.Ingredient, error) {
+	var ingredient domain.Ingredient
+	result := i.database.Find(&ingredient, "article = ?", id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &ingredient, nil
+}
+
 func (i ingredientRepository) Edit(ingredient *domain.Ingredient) error {
 	if result := i.database.Table("ingredients").Save(ingredient); result.Error != nil {
 		return result.Error

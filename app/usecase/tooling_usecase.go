@@ -74,12 +74,12 @@ func (tu *toolingUsecase) GetAll() ([]domain.ToolingResponse, error) {
 //	var text bytes.Buffer
 //	var queries []string
 //
-//	if &conditions.Name != nil {
-//		queries = append(queries, "Name = '"+conditions.Name+"'")
+//	if &conditions.Article != nil {
+//		queries = append(queries, "Article = '"+conditions.Article+"'")
 //	}
 //
 //	if &conditions.Type != nil {
-//		queries = append(queries, "Type = '"+conditions.Type.Name+"'")
+//		queries = append(queries, "Type = '"+conditions.Type.Article+"'")
 //	}
 //
 //	if &conditions.Amount != nil {

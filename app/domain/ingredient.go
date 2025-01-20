@@ -32,6 +32,7 @@ type IngredientResponse struct {
 type IngredientRepository interface {
 	Create(ingredient *Ingredient) error
 	Fetch() ([]Ingredient, error)
+	FetchById(id string) (*Ingredient, error)
 	Edit(ingredient *Ingredient) error
 	Delete(article string) error
 }

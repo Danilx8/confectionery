@@ -5,7 +5,7 @@ import (
 )
 
 type ToolingType struct {
-	Name string `gorm:"primaryKey;column:Name"`
+	Name string `gorm:"primaryKey;column:Article"`
 }
 
 type ToolingTypeRepository interface {

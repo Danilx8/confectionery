@@ -32,9 +32,26 @@ definitions:
       weight:
         type: number
     type: object
+  domain.CakeDecorationResponse:
+    properties:
+      amount:
+        type: integer
+      article:
+        type: string
+      cost_price:
+        type: number
+      delivery_time:
+        type: integer
+      name:
+        type: string
+      supplier:
+        type: string
+      unit:
+        type: string
+    type: object
   domain.CakeDecorationSpecificationResponse:
     properties:
-      name:
+      article:
         type: string
       required_amount:
         type: integer
@@ -82,9 +99,26 @@ definitions:
       unit:
         type: string
     type: object
+  domain.IngredientResponse:
+    properties:
+      amount:
+        type: integer
+      article:
+        type: string
+      cost_price:
+        type: number
+      delivery_time:
+        type: integer
+      name:
+        type: string
+      supplier:
+        type: string
+      unit:
+        type: string
+    type: object
   domain.IngredientSpecificationResponse:
     properties:
-      name:
+      article:
         type: string
       required_amount:
         type: integer
@@ -95,6 +129,25 @@ definitions:
         type: string
       size:
         type: string
+    type: object
+  domain.ItemEvaluationResponse:
+    properties:
+      cake_decorations:
+        items:
+          $ref: '#/definitions/domain.CakeDecorationResponse'
+        type: array
+      ingredients:
+        items:
+          $ref: '#/definitions/domain.IngredientResponse'
+        type: array
+      required_cake_decorations:
+        items:
+          $ref: '#/definitions/domain.CakeDecorationSpecificationResponse'
+        type: array
+      required_ingredients:
+        items:
+          $ref: '#/definitions/domain.IngredientSpecificationResponse'
+        type: array
     type: object
   domain.ItemSpecificationsResponse:
     properties:
@@ -571,6 +624,35 @@ paths:
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
       summary: Get all items
+      tags:
+      - Items
+  /item/evaluate:
+    post:
+      consumes:
+      - html/text
+      parameters:
+      - description: scheme of order request
+        in: body
+        name: data
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.ItemEvaluationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Evaluate ingredients and cake decorations by passed item name
       tags:
       - Items
   /item/specifications:

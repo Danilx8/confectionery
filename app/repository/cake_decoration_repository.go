@@ -32,6 +32,14 @@ func (cd cakeDecorationRepository) FetchAll() ([]domain.CakeDecoration, error) {
 	return cakeDecorations, nil
 }
 
+func (cd cakeDecorationRepository) FetchByID(id string) (*domain.CakeDecoration, error) {
+	var cakeDecoration domain.CakeDecoration
+	if result := cd.database.Where("article = ?", id).First(&cakeDecoration); result.Error != nil {
+		return nil, result.Error
+	}
+	return &cakeDecoration, nil
+}
+
 func (cd cakeDecorationRepository) Edit(cakeDecoration *domain.CakeDecoration) error {
 	if result := cd.database.Table("cake_decorations").Save(cakeDecoration); result.Error != nil {
 		return result.Error

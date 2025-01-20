@@ -17,6 +17,13 @@ type ItemSpecificationsResponse struct {
 	Description string                                `json:"description"`
 }
 
+type ItemEvaluationResponse struct {
+	RequiredIngredients     []IngredientSpecificationResponse     `json:"required_ingredients"`
+	RequiredCakeDecorations []CakeDecorationSpecificationResponse `json:"required_cake_decorations"`
+	Ingredients             []IngredientResponse                  `json:"ingredients"`
+	CakeDecorations         []CakeDecorationResponse              `json:"cake_decorations"`
+}
+
 type ItemRepository interface {
 	Fetch() ([]Item, error)
 }
@@ -24,4 +31,5 @@ type ItemRepository interface {
 type ItemUseCase interface {
 	FetchAll() ([]Item, error)
 	FetchRequired(name string) (ItemSpecificationsResponse, error)
+	EvaluateSpecifications(item string) (ItemEvaluationResponse, error)
 }

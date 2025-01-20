@@ -51,3 +51,30 @@ func (ic ItemController) Specifications(c *gin.Context) {
 		return
 	}
 }
+
+// Evaluate godoc
+// @Summary	Evaluate ingredients and cake decorations by passed item name
+// @Tags Items
+// @Accept html/text
+// @Produce json
+// @Param        data    body   string true  "scheme of order request"
+// @Success 200 {object} domain.ItemEvaluationResponse
+// @Failure 400 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Router /item/evaluate [post]
+func (ic ItemController) Evaluate(c *gin.Context) {
+	tmp, err := c.GetRawData()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+	name := string(tmp)
+
+	if response, err := ic.ItemUseCase.EvaluateSpecifications(name); err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, response)
+		return
+	}
+}

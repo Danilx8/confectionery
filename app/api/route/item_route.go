@@ -15,8 +15,10 @@ func NewItemRouter(db gorm.DB, group *gin.RouterGroup) {
 	icr := repository.NewIngredientSpecificationRepository(&db)
 	cdr := repository.NewCakeDecorationSpecificationRepository(&db)
 	psr := repository.NewPremadeSpecificationRepository(&db)
+	inr := repository.NewIngredientRepository(&db)
+	ckdr := repository.NewCakeDecorationRepository(&db)
 	ic := controller.ItemController{
-		ItemUseCase: usecase.NewItemUsecase(ir, icr, cdr, psr),
+		ItemUseCase: usecase.NewItemUsecase(ir, icr, cdr, psr, inr, ckdr),
 	}
 	group.GET("item/all", middleware.RoleMiddleware([]string{
 		domain.RoleName[domain.SupplementManager],
@@ -27,4 +29,6 @@ func NewItemRouter(db gorm.DB, group *gin.RouterGroup) {
 	}), ic.Get)
 	group.POST("item/specifications", middleware.RoleMiddleware([]string{domain.RoleName[domain.Master]}),
 		ic.Specifications)
+	group.POST("item/evaluate", middleware.RoleMiddleware([]string{domain.RoleName[domain.ClientManager]}),
+		ic.Evaluate)
 }

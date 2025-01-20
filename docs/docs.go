@@ -375,6 +375,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/item/evaluate": {
+            "post": {
+                "consumes": [
+                    "html/text"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Evaluate ingredients and cake decorations by passed item name",
+                "parameters": [
+                    {
+                        "description": "scheme of order request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ItemEvaluationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/item/specifications": {
             "post": {
                 "consumes": [
@@ -1699,10 +1744,36 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.CakeDecorationResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "article": {
+                    "type": "string"
+                },
+                "cost_price": {
+                    "type": "number"
+                },
+                "delivery_time": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "supplier": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.CakeDecorationSpecificationResponse": {
             "type": "object",
             "properties": {
-                "name": {
+                "article": {
                     "type": "string"
                 },
                 "required_amount": {
@@ -1776,10 +1847,36 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.IngredientResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "article": {
+                    "type": "string"
+                },
+                "cost_price": {
+                    "type": "number"
+                },
+                "delivery_time": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "supplier": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.IngredientSpecificationResponse": {
             "type": "object",
             "properties": {
-                "name": {
+                "article": {
                     "type": "string"
                 },
                 "required_amount": {
@@ -1795,6 +1892,35 @@ const docTemplate = `{
                 },
                 "size": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.ItemEvaluationResponse": {
+            "type": "object",
+            "properties": {
+                "cake_decorations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.CakeDecorationResponse"
+                    }
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.IngredientResponse"
+                    }
+                },
+                "required_cake_decorations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.CakeDecorationSpecificationResponse"
+                    }
+                },
+                "required_ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.IngredientSpecificationResponse"
+                    }
                 }
             }
         },

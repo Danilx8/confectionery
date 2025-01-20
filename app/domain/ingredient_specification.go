@@ -13,7 +13,7 @@ type IngredientSpecification struct {
 }
 
 type IngredientSpecificationResponse struct {
-	Name           string `json:"name"`
+	Article        string `json:"article"`
 	RequiredAmount int    `json:"required_amount"`
 }
 
