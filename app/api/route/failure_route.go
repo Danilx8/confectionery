@@ -18,5 +18,6 @@ func NewFailureRoute(db gorm.DB, group *gin.RouterGroup) {
 	}), fc.RegisterFailure)
 	group.GET("/failure/list", middleware.RoleMiddleware([]string{
 		domain.RoleName[domain.Master],
+		domain.RoleName[domain.Director],
 	}), fc.ListFailures)
 }
