@@ -26,11 +26,11 @@ func ValidateClientPassword(password string, login string) error {
 		}
 	}
 
-	if !(containsLower || containsUpper) {
+	if !(containsLower && containsUpper) {
 		return errors.New("password must contain uppercase and lowercase letters")
 	}
 
-	if strings.Contains(password, login) {
+	if strings.Contains(strings.ToLower(password), strings.ToLower(login)) {
 		return errors.New("password cannot contain login")
 	}
 
